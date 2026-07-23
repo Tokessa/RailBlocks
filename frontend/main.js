@@ -19,7 +19,7 @@
 
 import * as Blockly from 'blockly/core'
 
-import './renderer.js'
+import './zelos_renderer.js'
 import './dynamic_blocks.js'
 import { blockDefinitionsJson, createToolbox } from './blocks.js'
 import { compile } from './generator.js'
@@ -89,7 +89,7 @@ const workspace = Blockly.inject('blocklyDiv', {
   theme,
   // Load the custom renderer defined in renderer.js
   // Should not make a big difference but is advised to be loaded for extensions.
-  renderer: 'thrasos_extended',
+  renderer: 'zelos_renderer',
   move: {
     scrollbars: {
       horizontal: true,
@@ -115,6 +115,7 @@ function restoreWorkspaceState (workspace) {
     const state = JSON.parse(savedWorkspace)
     Blockly.serialization.workspaces.load(state, workspace)
     window.localStorage.removeItem(workspaceStorageKey)
+    workspace.render()
     return true
   } catch (error) {
     window.localStorage.removeItem(workspaceStorageKey)
@@ -210,13 +211,86 @@ function removeBlockWarning (block, warningKey) {
 function markUnusedBlocks (workspace) {
   // Mark all unused blocks
   workspace.getAllBlocks().forEach(block => {
+    // skip for shadow blocks; only show for parents
+    if (block.shadow) return
+    if ((block.type === 'number_range' || block.type === 'reached' || block.type === 'passed') && block.parentBlock_ !== null) {
+      removeBlockWarning(block, 'unused')
+      block.unused = false
+    }
+
     // getRootBlock() returns the topmost block in a stack.
-    if (!block.unused && block.getRootBlock().id !== 'ROOT') {
+    else if (!block.unused && block.getRootBlock().id !== 'ROOT') {
       addBlockWarning(block, 'unused', Blockly.Msg.RAILBLOCKS_WARNING_UNUSED)
       block.unused = true
     } else if (block.unused && block.getRootBlock().id === 'ROOT') {
       removeBlockWarning(block, 'unused')
       block.unused = false
+    }
+  })
+}
+
+/**
+ * Warns the user by indicating all ConditionalStatementD blocks that have a passed inside them.
+ * @param {Blockly.WorkspaceSvg} workspace The workspace to scan.
+ */
+function markPassedConditionalStatement (workspace) {
+  workspace.getAllBlocks().forEach(block => {
+    // is "passed" block in ConditionalStatementD?
+    if (block.type === 'passed' && block.parentBlock_?.type === 'ConditionalStatementD') {
+      const parent = block.parentBlock_
+      if (!parent.passed) {
+        parent.passed = true
+        addBlockWarning(parent, 'passed', Blockly.Msg.RAILBLOCKS_WARNING_PASSED)
+      }
+    } else if (block.passed) {
+      // remove passed when child block no longer exists
+      const hasPassed = block.getChildren().some(child => child.type === 'passed')
+      block.passed = hasPassed
+      if (!hasPassed) {
+        removeBlockWarning(block, 'passed')
+      }
+    }
+  })
+}
+
+/**
+ * Warns the user by indicating all blocks that are not inside the constrains.
+ * @param {Blockly.WorkspaceSvg} workspace The workspace to scan.
+ */
+function markBrokenConstrains (workspace) {
+  // Mark all blocks with broken constrains
+  const validators = {
+    // check number block
+    math_number: (block) => {
+      const value = Number(block.getFieldValue('NUM'))
+      return value < 0 || value > 23
+    },
+    // check both parts of range block
+    number_range: (block) => {
+      const start = Number(block.getFieldValue('START'))
+      const end = Number(block.getFieldValue('END'))
+      return start < 0 || start > 23 || end < 0 || end > 23
+    }
+  }
+  
+  // reset all brokenConstraint flags
+  workspace.getAllBlocks().forEach(block => {
+    block.brokenConstraint = false
+    removeBlockWarning(block, 'broken_constraint')
+  })
+
+  // accumulate broken state onto target
+  workspace.getAllBlocks().forEach(block => {
+    const validate = validators[block.type]
+    if (!validate) return
+
+    const isBroken = validate(block)
+    // set warning on parent block if it exists
+    const target = block.parentBlock_ ?? block
+
+    if (isBroken) {
+      target.brokenConstraint = true
+      addBlockWarning(target, 'broken_constraint', Blockly.Msg.RAILBLOCKS_WARNING_BROKEN_CONSTRAIN)
     }
   })
 }
@@ -302,12 +376,24 @@ workspace.addChangeListener((event) => {
   // Send all code to the output div.
   compile(workspace)
 
-  if (event.type === Blockly.Events.BLOCK_MOVE) {
+  if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.FINISHED_LOADING) {
     // Mark blocks not inside the program block.
     markUnusedBlocks(workspace)
     // Mark Branch and Parallel blocks if they contain a loop.
     markWarnings(workspace)
   }
+  if (event.type === Blockly.Events.BLOCK_FIELD_INTERMEDIATE_CHANGE || 
+      event.type === Blockly.Events.BLOCK_DRAG || 
+      event.type === Blockly.Events.BLOCK_CHANGE || 
+      event.type === Blockly.Events.FINISHED_LOADING) {
+    // Mark blocks that have numbers outside of the constrains
+    markBrokenConstrains(workspace)
+  }
+  if (event.type === Blockly.Events.BLOCK_DRAG) {
+    // Mark ConditionalStatementD blocks that have a "passed" block in themself 
+    markPassedConditionalStatement(workspace)
+  }
+  
 
   // Mark blocks that have unconnected connections.
   markUnconnectedBlocks(workspace)
@@ -459,6 +545,7 @@ document.getElementById('file_load').addEventListener('change', (event) => {
     // (toString because type safety)
     const state = JSON.parse(fr.result.toString())
     Blockly.serialization.workspaces.load(state, workspace)
+    workspace.render()
   }
   // ... and load it.
   fr.readAsText(files[0])
