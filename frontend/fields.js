@@ -82,6 +82,8 @@ export class FieldPlusMinus extends Blockly.Field {
       style: 'cursor: pointer; user-select: none; font-family: monospace; font-size: 16pt;'
     }, this.fieldGroup_)
     this.minusButton_.textContent = '−'
+    this.minusButton_.setAttribute('stroke', 'none')
+    this.minusButton_.setAttribute('paint-order', 'stroke fill')
 
     this.plusButton_ = Blockly.utils.dom.createSvgElement('text', {
       x: -3,
@@ -89,6 +91,8 @@ export class FieldPlusMinus extends Blockly.Field {
       style: 'cursor: pointer; user-select: none; font-family: monospace; font-size: 16pt;'
     }, this.fieldGroup_)
     this.plusButton_.textContent = '+'
+    this.plusButton_.setAttribute('stroke', 'none')
+    this.plusButton_.setAttribute('paint-order', 'stroke fill')
   }
 
   /**
@@ -120,6 +124,8 @@ export class FieldPlusMinus extends Blockly.Field {
       this,
       () => {
         this.plusButton_.setAttribute('font-weight', '900')
+        this.plusButton_.setAttribute('stroke', '#E4E4E4')
+        this.plusButton_.setAttribute('stroke-width', '0.75')
       }
     )
 
@@ -129,6 +135,8 @@ export class FieldPlusMinus extends Blockly.Field {
       this,
       () => {
         this.plusButton_.setAttribute('font-weight', '400')
+        this.plusButton_.setAttribute('stroke', 'none')
+        this.plusButton_.setAttribute('stroke-width', '0')
       }
     )
 
@@ -138,6 +146,8 @@ export class FieldPlusMinus extends Blockly.Field {
       this,
       () => {
         this.minusButton_.setAttribute('font-weight', '900')
+        this.minusButton_.setAttribute('stroke', '#E4E4E4')
+        this.minusButton_.setAttribute('stroke-width', '0.75')
       }
     )
 
@@ -147,6 +157,8 @@ export class FieldPlusMinus extends Blockly.Field {
       this,
       () => {
         this.minusButton_.setAttribute('font-weight', '400')
+        this.minusButton_.setAttribute('stroke', 'none')
+        this.minusButton_.setAttribute('stroke-width', '0')
       }
     )
   }
