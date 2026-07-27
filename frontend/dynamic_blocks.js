@@ -328,29 +328,34 @@ Blockly.Blocks.PointStatement = {
   domToMutation,
 
   updateShape: function () {
-      let i = 0
-      while (this.getInput('NUMBER_INPUT_' + i)) {
-        this.removeInput('NUMBER_INPUT_' + i)
-        i++
+    let currentCount = 0
+      while (this.getInput('NUMBER_INPUT_' + currentCount)) {
+        currentCount++
       }
 
-      // Remove the old trailing dummy 
+      // Remove the trailing dummy so new number inputs can stay before it.
       if (this.getInput('POINT_END')) {
         this.removeInput('POINT_END')
       }
 
-      for (let i = 0; i < this.inputCount; i++) {
-        const input = this.appendValueInput('NUMBER_INPUT_' + i)
+      while (currentCount > this.inputCount) {
+        this.removeInput('NUMBER_INPUT_' + (currentCount - 1))
+        currentCount--
+      }
+
+      while (currentCount < this.inputCount) {
+        const input = this.appendValueInput('NUMBER_INPUT_' + currentCount)
           .setCheck(['Number', 'number_range'])
 
-        if (i !== 0) {
+        if (currentCount !== 0) {
           input.appendField(',')
         }
 
-        // Attach a shadow math_number block via XML injection
-        ensureShadow(this, 'NUMBER_INPUT_' + i)
-      }
-
+      // Only inject shadows when the input is newly created.
+      ensureShadow(this, 'NUMBER_INPUT_' + currentCount)
+      currentCount++
+    }
+    
     // Append the last portion of this block.
     this.appendDummyInput('POINT_END')
       .appendField(Blockly.Msg.RAILBLOCKS_POINT_TEXT_END)
@@ -382,37 +387,43 @@ Blockly.Blocks.LightStatement = {
   domToMutation,
 
     updateShape: function () {
-      let i = 0
-      while (this.getInput('NUMBER_INPUT_' + i)) {
-        this.removeInput('NUMBER_INPUT_' + i)
-        i++
+      let currentCount = 0
+      while (this.getInput('NUMBER_INPUT_' + currentCount)) {
+        currentCount++
       }
 
-      // Remove the old trailing dummy 
+      // Remove the trailing dummy so new number inputs can stay before it.
       if (this.getInput('LIGHT_END')) {
         this.removeInput('LIGHT_END')
       }
 
-      for (let i = 0; i < this.inputCount; i++) {
-        const input = this.appendValueInput('NUMBER_INPUT_' + i)
+      while (currentCount > this.inputCount) {
+        this.removeInput('NUMBER_INPUT_' + (currentCount - 1))
+        currentCount--
+      }
+
+      while (currentCount < this.inputCount) {
+        const input = this.appendValueInput('NUMBER_INPUT_' + currentCount)
           .setCheck(['Number', 'number_range'])
 
-        if (i !== 0) {
+        if (currentCount !== 0) {
           input.appendField(',')
         }
 
-        // Only inject shadows when not loading from XML
-        ensureShadow(this, 'NUMBER_INPUT_' + i)
-      }
+      // Only inject shadows when the input is newly created.
+      ensureShadow(this, 'NUMBER_INPUT_' + currentCount)
+      currentCount++
+    }
 
-      this.appendDummyInput('LIGHT_END')
-        .appendField(Blockly.Msg.RAILBLOCKS_LIGHTS_TEXT_END)
-        .appendField(new Blockly.FieldDropdown(
-          [
-            [Blockly.Msg.RAILBLOCKS_LIGHTS_ON, 'ITEM1'],
-            [Blockly.Msg.RAILBLOCKS_LIGHTS_OFF, 'ITEM2']
-          ]
-        ), 'LIGHT_STATUS')
+    this.appendDummyInput('LIGHT_END')
+      .appendField(Blockly.Msg.RAILBLOCKS_LIGHTS_TEXT_END)
+      .appendField(new Blockly.FieldDropdown(
+        [
+          [Blockly.Msg.RAILBLOCKS_LIGHTS_ON, 'ITEM1'],
+          [Blockly.Msg.RAILBLOCKS_LIGHTS_OFF, 'ITEM2']
+        ]
+      ), 'LIGHT_STATUS')
+
     }
 }
 
