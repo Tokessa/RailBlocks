@@ -83,6 +83,6 @@ export const de_tokens = {
   RAILBLOCKS_WARNING_UNREACHABLE_WEAK: 'Blöcke nach diesem können vielleicht nicht erreicht werden, da sich eine Wiederholung innerhalb dieses Blocks befindet.',
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'Dieser Block hat leere Felder und wird einen Syntaxfehler verursachen!',
   RAILBLOCKS_WARNING_UNUSED: 'Unbenutzter Block',
-  RAILBLOCKS_WARNING_BROKEN_CONSTRAIN: 'Dieser Block enthält Zahlen, welche außerhalb der Einschränkungen liegen.', 
+  RAILBLOCKS_WARNING_BROKEN_CONSTRAIN: 'Dieser Block enthält Zahlen, welche außerhalb des gültigen Bereichs liegen.', 
   RAILBLOCKS_WARNING_PASSED: 'Der "passiert" Block kann momentan nicht in diesem Block genutzt werden.',
 }

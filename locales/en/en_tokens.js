@@ -83,6 +83,6 @@ export const en_tokens = {
   RAILBLOCKS_WARNING_UNREACHABLE_WEAK: 'Blocks after this may not be reached because of a loop inside this.',
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'This block has empty inputs and will cause a syntax error!',
   RAILBLOCKS_WARNING_UNUSED: 'Unused block',
-  RAILBLOCKS_WARNING_BROKEN_CONSTRAIN: 'This block has numbers that are outside of the constrains.',
+  RAILBLOCKS_WARNING_BROKEN_CONSTRAIN: 'This block has numbers that are outside the valid range.',
   RAILBLOCKS_WARNING_PASSED: 'The "passed" block can currently not be used in this block.',
 }

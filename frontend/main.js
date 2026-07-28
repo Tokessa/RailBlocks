@@ -253,23 +253,25 @@ function markPassedConditionalStatement (workspace) {
   })
 }
 
+const light_constrains = [0, 23]
+
 /**
- * Warns the user by indicating all blocks that are not inside the constrains.
+ * Warns the user by indicating all blocks that are not inside the constraints.
  * @param {Blockly.WorkspaceSvg} workspace The workspace to scan.
  */
 function markBrokenConstrains (workspace) {
-  // Mark all blocks with broken constrains
+  // Mark all blocks with broken constraints
   const validators = {
     // check number block
     math_number: (block) => {
       const value = Number(block.getFieldValue('NUM'))
-      return value < 0 || value > 23
+      return value < light_constrains[0] || value > light_constrains[1]
     },
     // check both parts of range block
     number_range: (block) => {
       const start = Number(block.getFieldValue('START'))
       const end = Number(block.getFieldValue('END'))
-      return start < 0 || start > 23 || end < 0 || end > 23
+      return start < light_constrains[0] || start > light_constrains[1] || end < light_constrains[0] || end > light_constrains[1]
     }
   }
   

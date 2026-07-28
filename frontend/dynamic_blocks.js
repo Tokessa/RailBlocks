@@ -90,9 +90,9 @@ function buildAnotherCondRow(index, block){
   const input = block.appendValueInput(`COND_BOOL${index}`)
     .setCheck('Boolean')
 
-  if (index !== 0) {
-    input.appendField(new Blockly.FieldLabel('           ')) // empty placeholder
-  }
+  // if (index !== 0) {
+  //   input.appendField(new Blockly.FieldLabel('           ')) // empty placeholder
+  // }
 
   input
   .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_START)
