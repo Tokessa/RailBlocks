@@ -253,7 +253,20 @@ function markPassedConditionalStatement (workspace) {
   })
 }
 
+// constrains for number of lights and number of switch points
 const light_constrains = [0, 23]
+const switch_constrains = [0, 29]
+
+// Map of parent block type to constraint range
+const parentConstraints = {
+  PointStatement: switch_constrains
+}
+const defaultConstraints = light_constrains
+
+function getConstraintsFor (block) {
+  const parentType = block.parentBlock_?.type
+  return parentConstraints[parentType] || defaultConstraints
+}
 
 /**
  * Warns the user by indicating all blocks that are not inside the constraints.
@@ -264,14 +277,16 @@ function markBrokenConstrains (workspace) {
   const validators = {
     // check number block
     math_number: (block) => {
+      const [minimum, maximum] = getConstraintsFor(block)
       const value = Number(block.getFieldValue('NUM'))
-      return value < light_constrains[0] || value > light_constrains[1]
+      return value < minimum || value > maximum
     },
     // check both parts of range block
     number_range: (block) => {
+      const [minimum, maximum] = getConstraintsFor(block)
       const start = Number(block.getFieldValue('START'))
       const end = Number(block.getFieldValue('END'))
-      return start < light_constrains[0] || start > light_constrains[1] || end < light_constrains[0] || end > light_constrains[1]
+      return start < minimum || start > maximum || end < minimum || end > maximum
     }
   }
   
