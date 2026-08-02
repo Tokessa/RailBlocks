@@ -21,6 +21,7 @@ import * as Blockly from 'blockly/core'
 
 import './zelos_renderer.js'
 import './dynamic_blocks.js'
+import './validators.js' 
 import { blockDefinitionsJson, createToolbox } from './blocks.js'
 import { compile } from './generator.js'
 import { getLabel, getToolBoxLabels, getHtmlLabels, getStoredLanguage, applyLanguage, LANGUAGE_STORAGE_KEY } from './localization.js'
@@ -213,7 +214,7 @@ function markUnusedBlocks (workspace) {
   workspace.getAllBlocks().forEach(block => {
     // skip for shadow blocks; only show for parents
     if (block.shadow) return
-    if ((block.type === 'number_range' || block.type === 'reached' || block.type === 'passed') && block.parentBlock_ !== null) {
+    if ((block.type === 'int_range' || block.type === 'reached' || block.type === 'passed') && block.parentBlock_ !== null) {
       removeBlockWarning(block, 'unused')
       block.unused = false
     }
@@ -249,65 +250,6 @@ function markPassedConditionalStatement (workspace) {
       if (!hasPassed) {
         removeBlockWarning(block, 'passed')
       }
-    }
-  })
-}
-
-// constrains for number of lights and number of switch points
-const light_constrains = [0, 23]
-const switch_constrains = [0, 29]
-
-// Map of parent block type to constraint range
-const parentConstraints = {
-  PointStatement: switch_constrains
-}
-const defaultConstraints = light_constrains
-
-function getConstraintsFor (block) {
-  const parentType = block.parentBlock_?.type
-  return parentConstraints[parentType] || defaultConstraints
-}
-
-/**
- * Warns the user by indicating all blocks that are not inside the constraints.
- * @param {Blockly.WorkspaceSvg} workspace The workspace to scan.
- */
-function markBrokenConstrains (workspace) {
-  // Mark all blocks with broken constraints
-  const validators = {
-    // check number block
-    math_number: (block) => {
-      const [minimum, maximum] = getConstraintsFor(block)
-      const value = Number(block.getFieldValue('NUM'))
-      return value < minimum || value > maximum
-    },
-    // check both parts of range block
-    number_range: (block) => {
-      const [minimum, maximum] = getConstraintsFor(block)
-      const start = Number(block.getFieldValue('START'))
-      const end = Number(block.getFieldValue('END'))
-      return start < minimum || start > maximum || end < minimum || end > maximum
-    }
-  }
-  
-  // reset all brokenConstraint flags
-  workspace.getAllBlocks().forEach(block => {
-    block.brokenConstraint = false
-    removeBlockWarning(block, 'broken_constraint')
-  })
-
-  // accumulate broken state onto target
-  workspace.getAllBlocks().forEach(block => {
-    const validate = validators[block.type]
-    if (!validate) return
-
-    const isBroken = validate(block)
-    // set warning on parent block if it exists
-    const target = block.parentBlock_ ?? block
-
-    if (isBroken) {
-      target.brokenConstraint = true
-      addBlockWarning(target, 'broken_constraint', Blockly.Msg.RAILBLOCKS_WARNING_BROKEN_CONSTRAIN)
     }
   })
 }
@@ -398,13 +340,6 @@ workspace.addChangeListener((event) => {
     markUnusedBlocks(workspace)
     // Mark Branch and Parallel blocks if they contain a loop.
     markWarnings(workspace)
-  }
-  if (event.type === Blockly.Events.BLOCK_FIELD_INTERMEDIATE_CHANGE || 
-      event.type === Blockly.Events.BLOCK_DRAG || 
-      event.type === Blockly.Events.BLOCK_CHANGE || 
-      event.type === Blockly.Events.FINISHED_LOADING) {
-    // Mark blocks that have numbers outside of the constrains
-    markBrokenConstrains(workspace)
   }
   if (event.type === Blockly.Events.BLOCK_DRAG) {
     // Mark ConditionalStatementD blocks that have a "passed" block in themself 

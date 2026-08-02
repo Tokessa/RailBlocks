@@ -39,8 +39,8 @@ export const en_tokens = {
   RAILBLOCKS_CONTACT_WAIT_FIRST: 'first',
   RAILBLOCKS_CONTACT_WAIT_SECOND: 'second',
 
-  RAILBLOCKS_NUMBER_RANGE_TEXT: '%1 to %2',
-  RAILBLOCKS_NUMBER_RANGE_TOOLTIP: 'Creates a range of numbers.',
+  RAILBLOCKS_INT_RANGE_TEXT: '%1 to %2',
+  RAILBLOCKS_INT_RANGE_TOOLTIP: 'Creates a range of numbers.',
 
   RAILBLOCKS_TIME_WAIT_TEXT: 'Wait for %1 second(s)',
   RAILBLOCKS_TIME_WAIT_TOOLTIP: 'Do nothing for a certain amount of time.',
@@ -83,6 +83,5 @@ export const en_tokens = {
   RAILBLOCKS_WARNING_UNREACHABLE_WEAK: 'Blocks after this may not be reached because of a loop inside this.',
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'This block has empty inputs and will cause a syntax error!',
   RAILBLOCKS_WARNING_UNUSED: 'Unused block',
-  RAILBLOCKS_WARNING_BROKEN_CONSTRAIN: 'This block has numbers that are outside the valid range.',
   RAILBLOCKS_WARNING_PASSED: 'The "passed" block can currently not be used in this block.',
 }

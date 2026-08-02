@@ -134,7 +134,7 @@ generator.forBlock.TrackStatementALT = (block, gen) => {
 }
 
 // return a list of numbers from start to end inclusive
-generator.forBlock.number_range = (block) => {
+generator.forBlock.int_range = (block) => {
   const start = parseInt(block.getFieldValue('START')) || 0
   const end = parseInt(block.getFieldValue('END')) || 0
   
@@ -152,8 +152,8 @@ generator.forBlock.number_range = (block) => {
   return [numbers.join(', '), Order.ATOMIC]
 }
 
-// return a number
-generator.forBlock.math_number = (block) => {
+// return an integer number
+generator.forBlock.int_number = (block) => {
   return [block.getFieldValue('NUM') || '0', Order.ATOMIC]
 }
 

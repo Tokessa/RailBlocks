@@ -345,7 +345,7 @@ Blockly.Blocks.PointStatement = {
 
       while (currentCount < this.inputCount) {
         const input = this.appendValueInput('NUMBER_INPUT_' + currentCount)
-          .setCheck(['Number', 'number_range'])
+          .setCheck(['Number', 'int_range'])
 
         if (currentCount !== 0) {
           input.appendField(',')
@@ -404,7 +404,7 @@ Blockly.Blocks.LightStatement = {
 
       while (currentCount < this.inputCount) {
         const input = this.appendValueInput('NUMBER_INPUT_' + currentCount)
-          .setCheck(['Number', 'number_range'])
+          .setCheck(['Number', 'int_range'])
 
         if (currentCount !== 0) {
           input.appendField(',')
@@ -427,12 +427,12 @@ Blockly.Blocks.LightStatement = {
     }
 }
 
-// Injects a math_number shadow into an input if nothing is connected yet
+// Injects a int_number shadow into an input if nothing is connected yet
 export function ensureShadow(block, inputName) {
   const input = block.getInput(inputName)
   if (!input || input.connection.targetBlock()) return
 
-  const shadowBlock = block.workspace.newBlock('math_number')
+  const shadowBlock = block.workspace.newBlock('int_number')
   shadowBlock.initSvg?.()
   shadowBlock.setShadow(true)
   shadowBlock.getField('NUM').setValue(0)

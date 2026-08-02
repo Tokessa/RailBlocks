@@ -259,16 +259,18 @@ const blockDefinitionsJson = [
     colour: 155,
     tooltip: "Returns true if passed"
   },
-  // Number range
-  // Is a range of numbers from start to end inclusive
+  // Integer range
+  // Is a range of integer numbers from start to end inclusive
   {
-  type: "number_range",
-  message0: "%{BKY_RAILBLOCKS_NUMBER_RANGE_TEXT}",
+  type: "int_range",
+  message0: "%{BKY_RAILBLOCKS_INT_RANGE_TEXT}",
   args0: [
     {
       type: "field_number",
       name: "START",
-      value: 0
+      value: 0,
+      min: 0,
+      precision: 1
     },
     {
       type: "field_number",
@@ -276,23 +278,27 @@ const blockDefinitionsJson = [
       value: 2
     }
   ],
-  output: "number_range",
+  output: "int_range",
+  extensions: ["dynamic_int_range_validator"],
   colour: 80,
-  tooltip: "%{BKY_RAILBLOCKS_NUMBER_RANGE_TOOLTIP}"
+  tooltip: "%{BKY_RAILBLOCKS_INT_RANGE_TOOLTIP}"
   },
-  // Number
+  // Integer
   // Is just a simple number for shadow fields
   {
-    type: "math_number",
+    type: "int_number",
     message0: "%1",
     args0: [
       {
         type: "field_number",
         name: "NUM",
-        value: 1
+        value: 1,
+        min: 0,
+        precision: 1
       }
     ],
-    output: "Number"
+    output: "Number",
+    extensions: ["dynamic_int_number_validator"]
   }
 ]
 
@@ -388,7 +394,7 @@ function createToolbox (labels) {
       },
       {
         kind: 'block',
-        type: 'number_range'
+        type: 'int_range'
       },
     ]
   }
