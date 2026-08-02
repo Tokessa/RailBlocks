@@ -19,14 +19,14 @@
 
 import * as Blockly from 'blockly'
 
-// constrains for number of lights and number of switch points
-const light_constrains = [0, 23]
-const switch_constrains = [0, 29]
+// constraints for number of lights and number of switch points
+const light_constraints = [0, 23]
+const switch_constraints = [0, 29]
 
 // Map of parent block type to constraint range
 const parentConstraints = {
-  PointStatement: switch_constrains,
-  LightStatement: light_constrains
+  PointStatement: switch_constraints,
+  LightStatement: light_constraints
 }
 const defaultConstraints = [-Infinity, Infinity] // no constraint by default
 
