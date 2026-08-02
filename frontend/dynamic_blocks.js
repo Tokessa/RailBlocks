@@ -328,6 +328,9 @@ Blockly.Blocks.PointStatement = {
   domToMutation,
 
   updateShape: function () {
+    // get current status for recreation after +-
+    const branchOption = this.getFieldValue('BRANCH_OPTION')
+
     let currentCount = 0
       while (this.getInput('NUMBER_INPUT_' + currentCount)) {
         currentCount++
@@ -365,6 +368,10 @@ Blockly.Blocks.PointStatement = {
           [Blockly.Msg.RAILBLOCKS_POINT_BRANCH, 'ITEM2']
         ]
       ), 'BRANCH_OPTION')
+
+    if (branchOption) {
+      this.setFieldValue(branchOption, 'BRANCH_OPTION')
+    }
   }
 }
 
@@ -387,6 +394,9 @@ Blockly.Blocks.LightStatement = {
   domToMutation,
 
     updateShape: function () {
+      // get current status for recreation after +-
+      const lightStatus = this.getFieldValue('LIGHT_STATUS')
+
       let currentCount = 0
       while (this.getInput('NUMBER_INPUT_' + currentCount)) {
         currentCount++
@@ -424,6 +434,9 @@ Blockly.Blocks.LightStatement = {
         ]
       ), 'LIGHT_STATUS')
 
+    if (lightStatus) {
+        this.setFieldValue(lightStatus, 'LIGHT_STATUS')
+     }
     }
 }
 
