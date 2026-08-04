@@ -67,6 +67,8 @@ export const en_tokens = {
 
   RAILBLOCKS_TRACK_TEXT_START: 'Set track',
   RAILBLOCKS_TRACK_TEXT_END: 'to',
+  RAILBLOCKS_TRACK_TEXT: 'Set track %1 to %2',
+  RAILBLOCKS_TRACK_NONE: '(none)',
   RAILBLOCKS_TRACK_TOOLTIP: 'Sets a number of tracks to some velocity and direction.\n' + 'Click the plus/minus symbol to control the number of tracks.',
 
   RAILBLOCKS_POINT_TEXT_START: 'Set point',
