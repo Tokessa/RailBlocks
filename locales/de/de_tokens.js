@@ -40,7 +40,7 @@ export const de_tokens = {
   RAILBLOCKS_CONTACT_WAIT_SECOND: 'zweiter',
 
   RAILBLOCKS_INT_RANGE_TEXT: '%1 bis %2',
-  RAILBLOCKS_INT_RANGE_TOOLTIP: 'Erstellt eine Reihe von Nummern.',
+  RAILBLOCKS_INT_RANGE_TOOLTIP: 'Erstellt eine Reihe von Zahlen.',
 
   RAILBLOCKS_TIME_WAIT_TEXT: 'Warte für %1 Sekunde(n)',
   RAILBLOCKS_TIME_WAIT_TOOLTIP: 'Tue nichts für eine bestimmte Zeit.',

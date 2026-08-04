@@ -90,9 +90,9 @@ function buildAnotherCondRow(index, block){
   const input = block.appendValueInput(`COND_BOOL${index}`)
     .setCheck('Boolean')
 
-  // if (index !== 0) {
-  //   input.appendField(new Blockly.FieldLabel('           ')) // empty placeholder
-  // }
+  if (index !== 0) {
+    input.appendField(new Blockly.FieldLabel('           ')) // empty placeholder
+  }
 
   input
   .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_START)
@@ -328,7 +328,6 @@ Blockly.Blocks.PointStatement = {
   domToMutation,
 
   updateShape: function () {
-    // get current status for recreation after +-
     const branchOption = this.getFieldValue('BRANCH_OPTION')
 
     let currentCount = 0
@@ -394,7 +393,6 @@ Blockly.Blocks.LightStatement = {
   domToMutation,
 
     updateShape: function () {
-      // get current status for recreation after +-
       const lightStatus = this.getFieldValue('LIGHT_STATUS')
 
       let currentCount = 0
